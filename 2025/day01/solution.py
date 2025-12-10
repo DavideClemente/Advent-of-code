@@ -15,33 +15,32 @@ sys.path.append(str(Path(__file__).parent.parent))
 
 regex = re.compile(r"([LR])(\d+)")
 
+def rotate_dial(dial: Dial, turn: str, steps: int) -> None:
+    """Rotate the dial based on the turn direction and steps."""
+    match turn:
+        case "L":
+            dial.rotate(Rotation.LEFT, steps)
+        case "R":
+            dial.rotate(Rotation.RIGHT, steps)
 
-def part1(data: list[str]) -> int:
+def part1(instructions: list[str]) -> int:
     """Solve part 1 of the puzzle."""
 
     dial = Dial(pointer=50)
-    for instruction in data:
+    for instruction in instructions:
         matches = regex.findall(instruction)
         for (turn, steps) in matches:
-            match turn:
-                case "L":
-                    dial.rotate(Rotation.LEFT, int(steps))
-                case "R":
-                    dial.rotate(Rotation.RIGHT, int(steps))
+            rotate_dial(dial, turn, int(steps))
     return dial.zero_endings
 
 
-def part2(data: str) -> int:
+def part2(instructions: list[str]) -> int:
     """Solve part 2 of the puzzle."""
     dial = Dial(pointer=50)
-    for instruction in data:
+    for instruction in instructions:
         matches = regex.findall(instruction)
         for (turn, steps) in matches:
-            match turn:
-                case "L":
-                    dial.rotate(Rotation.LEFT, int(steps))
-                case "R":
-                    dial.rotate(Rotation.RIGHT, int(steps))
+            rotate_dial(dial, turn, int(steps))
     return dial.zero_endings + dial.zero_passes
 
 

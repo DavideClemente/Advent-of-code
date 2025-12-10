@@ -14,15 +14,14 @@ sys.path.append(str(Path(__file__).parent.parent))
 def points_remove(grid: Grid) -> tuple[list[Point], int] :
     points = []
 
-    for x in range(grid.width):
-        for y in range(grid.width):
-            #print(f"Current Point({x,y}) - {grid.get(Point(x,y))}")
+    for y in range(grid.width):
+        for x in range(grid.width):
             current_point = Point(x, y)
             neighbors = grid.neighbors(current_point, diagonal=True)
             neighbors_values = list(map(lambda n: grid.get(n), neighbors))
             if grid.get(current_point) == '@' and neighbors_values.count('@') < 4:
                 points.append(Point(x,y))
-    return (points, len(points))
+    return points, len(points)
 
 def part1(grid: Grid) -> int:
     """Solve part 1 of the puzzle."""

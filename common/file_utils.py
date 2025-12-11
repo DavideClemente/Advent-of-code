@@ -91,3 +91,24 @@ def parse_lines(filepath: str, parser: Callable[[str], Any]) -> List[Any]:
     """
     lines = read_lines(filepath)
     return [parser(line) for line in lines if line]
+
+
+def read_columns(filepath: str) -> List[List[str]]:
+    """
+    Read input file and return columns (transposed rows).
+    Uses split() to tokenize, so columns are by token position not character position.
+
+    Args:
+        filepath: Path to the input file
+
+    Returns:
+        List of columns, where each column is a list of values
+    """
+    lines = read_lines(filepath)
+    rows = [line.split() for line in lines if line]
+    
+    if not rows:
+        return []
+    
+    # Transpose rows to columns
+    return [list(col) for col in zip(*rows)]

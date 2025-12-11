@@ -1,6 +1,6 @@
 """Common utilities for Advent of Code challenges."""
 
-from .file_utils import read_input, read_lines, read_integers, read_grid
+from .file_utils import read_input, read_lines, read_integers, read_grid, read_columns
 from .grid import Grid, Point, Direction
 from .dial import Dial, Rotation
 from .algorithms import bfs, dfs, dijkstra
@@ -11,6 +11,7 @@ __all__ = [
     'read_lines',
     'read_integers',
     'read_grid',
+    'read_columns',
     'Grid',
     'Dial',
     'Rotation',

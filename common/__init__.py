@@ -5,6 +5,7 @@ from .grid import Grid, Point, Direction
 from .dial import Dial, Rotation
 from .algorithms import bfs, dfs, dijkstra
 from .range import Range
+from .trees import TernaryTree, TernaryNode
 
 __all__ = [
     'read_input',
@@ -21,4 +22,6 @@ __all__ = [
     'bfs',
     'dfs',
     'dijkstra',
+    'TernaryTree',
+    'TernaryNode'
 ]

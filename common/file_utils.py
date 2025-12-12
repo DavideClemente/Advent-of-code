@@ -112,3 +112,8 @@ def read_columns(filepath: str) -> List[List[str]]:
     
     # Transpose rows to columns
     return [list(col) for col in zip(*rows)]
+
+
+def read_grid(filepath: str) -> List[List[str]]:
+    data = read_input(filepath)
+    return [list(line) for line in data.splitlines()]

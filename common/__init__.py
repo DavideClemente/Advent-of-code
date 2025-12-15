@@ -6,6 +6,7 @@ from .dial import Dial, Rotation
 from .algorithms import bfs, dfs, dijkstra
 from .range import Range
 from .trees import TernaryTree, TernaryNode
+from .union_find import UnionFind
 
 __all__ = [
     'read_input',
@@ -23,5 +24,6 @@ __all__ = [
     'dfs',
     'dijkstra',
     'TernaryTree',
-    'TernaryNode'
+    'TernaryNode',
+    'UnionFind'
 ]

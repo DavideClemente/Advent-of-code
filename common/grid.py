@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import List, Tuple, Set, Optional, Iterator
+from typing import Any, List, Tuple, Set, Optional, Iterator
 
 
 @dataclass(frozen=True)
@@ -139,3 +139,140 @@ class Grid:
     def copy(self) -> 'Grid':
         """Create a deep copy of the grid."""
         return Grid([row[:] for row in self.data])
+
+
+class Matrix:
+    """2D matrix with numeric values and function application capabilities."""
+
+    def __init__(self, data: List[List[int]]):
+        """
+        Initialize matrix from 2D list.
+
+        Args:
+            data: 2D list of numeric values representing the matrix
+        """
+        self.data = data
+        self.height = len(data)
+        self.width = len(data[0]) if data else 0
+
+    @classmethod
+    def create_empty(cls, rows: int, cols: int, default_value: int = 0) -> 'Matrix':
+        """Create a matrix filled with a default value.
+
+        Args:
+            rows: Number of rows
+            cols: Number of columns
+            default_value: Value to fill all cells with (default: 0)
+
+        Returns:
+            A new Matrix instance
+
+        Example:
+            matrix = Matrix.create_empty(5, 5)        # Create 5x5 matrix filled with 0s
+            matrix = Matrix.create_empty(3, 3, -1)    # Create 3x3 matrix filled with -1s
+        """
+        data = [[default_value for _ in range(cols)] for _ in range(rows)]
+        return cls(data)
+
+    def get(self, row: int, col: int, default: Optional[int] = None) -> Optional[int]:
+        """Get value at [row, col], return default if out of bounds."""
+        if self.in_bounds(row, col):
+            return self.data[row][col]
+        return default
+
+    def set(self, row: int, col: int, value: int) -> None:
+        """Set value at [row, col]."""
+        if self.in_bounds(row, col):
+            self.data[row][col] = value
+
+    def in_bounds(self, row: int, col: int) -> bool:
+        """Check if position is within matrix bounds."""
+        return 0 <= row < self.height and 0 <= col < self.width
+
+    def apply_to_cell(self, row: int, col: int, func) -> None:
+        """Apply a function to a single cell, replacing its value with the result.
+
+        Args:
+            row: Row index
+            col: Column index
+            func: Function that takes a value and returns a new value
+
+        Example:
+            matrix.apply_to_cell(0, 0, lambda x: x * -1)  # Multiply by -1
+            matrix.apply_to_cell(1, 2, lambda x: x + 1)   # Add 1
+        """
+        if self.in_bounds(row, col):
+            self.data[row][col] = func(self.data[row][col])
+
+    def apply_to_all(self, func) -> None:
+        """Apply a function to all cells in the matrix.
+
+        Args:
+            func: Function that takes a value and returns a new value
+
+        Example:
+            matrix.apply_to_all(lambda x: x * 2)          # Double all values
+            matrix.apply_to_all(lambda x: abs(x))         # Take absolute value
+        """
+        for row in range(self.height):
+            for col in range(self.width):
+                self.data[row][col] = func(self.data[row][col])
+
+    def apply_to_interval(self, row_start: int, col_start: int, row_end: int, col_end: int, func) -> None:
+        """Apply a function to a rectangular interval of cells in the matrix.
+
+        Args:
+            row_start: Starting row index (inclusive)
+            row_end: Ending row index (exclusive)
+            col_start: Starting column index (inclusive)
+            col_end: Ending column index (exclusive)
+            func: Function that takes a value and returns a new value
+
+        Example:
+            matrix.apply_to_interval(0, 0, 2, 2, lambda x: x * -1)  # Multiply top-left 2x2 block by -1
+            matrix.apply_to_interval(1, 1, 3, 3, lambda x: x + 1)   # Add 1 to bottom-right 2x2 block
+        """
+        for row in range(row_start, min(row_end, self.height)):
+            for col in range(col_start, min(col_end, self.width)):
+                self.data[row][col] = func(self.data[row][col])
+
+    def count_matching(self, validation_func) -> int:
+        """Count the number of cells that pass a validation function.
+
+        Args:
+            validation_func: Function that takes a value and returns True/False
+
+        Returns:
+            Number of cells where validation_func returns True
+
+        Example:
+            count = matrix.count_matching(lambda x: x > 0)         # Count positive values
+            count = matrix.count_matching(lambda x: x == 5)        # Count cells equal to 5
+            count = matrix.count_matching(lambda x: x % 2 == 0)    # Count even values
+        """
+        count = 0
+        for row in range(self.height):
+            for col in range(self.width):
+                if validation_func(self.data[row][col]):
+                    count += 1
+        return count
+
+    def row(self, index: int) -> List[int]:
+        """Get a row from the matrix."""
+        if 0 <= index < self.height:
+            return self.data[index][:]
+        return []
+
+    def column(self, index: int) -> List[int]:
+        """Get a column from the matrix."""
+        if 0 <= index < self.width:
+            return [self.data[row][index] for row in range(self.height)]
+        return []
+
+    def __str__(self) -> str:
+        """String representation of the matrix."""
+        return '\n'.join(' '.join(str(val) for val in row) for row in self.data)
+
+    def copy(self) -> 'Matrix':
+        """Create a deep copy of the matrix."""
+        return Matrix([row[:] for row in self.data])
